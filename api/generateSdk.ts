@@ -2,7 +2,7 @@ type GenerateSdkContext = {
   openapis: {
     /** Used as prefix for the operation (e.g. `sdk.userCrud.create`). If not given, can be inferred from `openapi.info.title` or, if not existent, from `openapiUrl` */
     slug?: string;
-    secret: string;
+    envKeyName: string;
     /** If given, will only put this subset in the SDK */
     operationIds?: string[];
     openapiUrl: string;
@@ -19,7 +19,9 @@ const generateSdk = async (context: GenerateSdkContext) => {
   const { openapis } = context;
   //start with openapi-fetch-typescript
   // Turn multiple openapis into 1 big Typescript SDK file
-  const sdk = `// sdk for ${openapis.length} openapis`;
+  const sdk = `// sdk for ${openapis.length} openapis: ${openapis
+    .map((x) => x.slug)
+    .join(", ")}`;
   return { sdk } satisfies GenerateSdkResponse;
 };
 

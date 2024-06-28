@@ -61,13 +61,13 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["secret", "openapiUrl"],
+              "required": ["envKeyName", "openapiUrl"],
               "properties": {
                 "slug": {
                   "type": "string",
                   "description": "Used as prefix for the operation (e.g. `sdk.userCrud.create`). If not given, can be inferred from `openapi.info.title` or, if not existent, from `openapiUrl`"
                 },
-                "secret": {
+                "envKeyName": {
                   "type": "string"
                 },
                 "operationIds": {

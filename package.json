@@ -1,0 +1,28 @@
+{
+  "name": "actionschema-migrate",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Migrate your actionschema server and get an SDK",
+  "main": "src/migration.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeFromAnywhere/actionschema-migrate.git"
+  },
+  "author": "Wijnand",
+  "license": "MIT",
+  "bin": "src/migration.ts",
+  "bugs": {
+    "url": "https://github.com/CodeFromAnywhere/actionschema-migrate/issues"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.6",
+    "@types/node": "^20.14.9"
+  },
+  "homepage": "https://github.com/CodeFromAnywhere/actionschema-migrate#readme",
+  "dependencies": {
+    "from-anywhere": "^0.0.35"
+  }
+}

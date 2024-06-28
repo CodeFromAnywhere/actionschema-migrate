@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "relativeJsonSchemaBasePath": {
+      "type": "string",
+      "description": "Any JSON schemas we need in typescript"
+    },
+    "remoteJsonSchemaUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "remoteOpenapis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "operationIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Prune it"
+          }
+        },
+        "required": ["url"]
+      },
+      "description": "Useful to add later like I wanted making an actionschema-server"
+    },
+    "relativeAgentBasePath": {
+      "type": "string",
+      "description": "Agent schemas that need to become an agent API"
+    },
+    "remoteAgentUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "customAgentServer": {
+      "type": "string"
+    },
+    "relativeFilePromptBasePath": {
+      "type": "string",
+      "description": "File prompts that need to be accessible through the actionschema CLI"
+    },
+    "remoteFilePromptUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "relativeCrudSchemaBasePath": {
+      "type": "string",
+      "description": "CRUD schemas we need to be a CRUD API"
+    },
+    "remoteCrudSchemaUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "customCrudServer": {
+      "type": "string"
+    }
+  }
+}

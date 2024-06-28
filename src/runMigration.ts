@@ -19,6 +19,7 @@ type Schema = { [key: string]: any };
 /** TODO: Get this from schema. This may be an exception though, haha. */
 export type MigrationContext = {
   slugPrefix?: string;
+  relativeOutputPath?: string;
   /**any json schemas we need in typescript*/
   relativeJsonSchemaBasePath?: string;
   remoteJsonSchemaUrls?: string[];
@@ -78,6 +79,7 @@ export const addOrReplaceEnvKeys = (
 export const runMigration = async (context: MigrationContext) => {
   const {
     relativeCrudSchemaBasePath,
+    relativeOutputPath,
     remoteCrudSchemaUrls,
     slugPrefix,
     relativeAgentBasePath,
@@ -169,7 +171,7 @@ export const runMigration = async (context: MigrationContext) => {
 
   const schemas = fileSchemas.concat(remoteSchemas);
 
-  console.log("schemas found:", schemas.length);
+  console.log("schemas found:", schemas.length, { schemas, filePaths });
 
   const results = await Promise.all(
     fileSchemas.map(async (item) => {
@@ -232,7 +234,10 @@ export const runMigration = async (context: MigrationContext) => {
     return;
   }
 
-  const absoluteSdkPath = path.join(process.cwd(), "src/sdk");
+  const absoluteSdkPath = path.join(
+    process.cwd(),
+    relativeOutputPath || "src/sdk",
+  );
 
   if (!existsSync(absoluteSdkPath)) {
     await mkdir(absoluteSdkPath, { recursive: true });

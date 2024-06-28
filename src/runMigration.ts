@@ -1,4 +1,4 @@
-import { $ } from "bun";
+// import { $ } from "bun";
 import {
   notEmpty,
   snakeCase,
@@ -6,11 +6,12 @@ import {
   tryParseJson,
   generateRandomString,
 } from "from-anywhere";
-import { fs } from "from-anywhere/node";
-import { readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
-import { fetchGenerateSdk } from "./fetchGenerateSdk.js";
+
+// import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
+// import { fetchGenerateSdk } from "./fetchGenerateSdk.js";
 
 type Schema = { [key: string]: any };
 
@@ -65,11 +66,9 @@ export const runMigration = async (context: MigrationContext) => {
   const crudAdminToken = process.env.CRUD_ADMIN_TOKEN;
 
   if (!crudAdminToken) {
-    console.log("Please provide a crudAdminToken");
+    console.log("Please provide a CRUD_ADMIN_TOKEN in your .env");
     return;
   }
-
-  $.nothrow();
 
   const filePaths = absoluteBasePath
     ? readdirSync(absoluteBasePath, { withFileTypes: true })
@@ -81,18 +80,22 @@ export const runMigration = async (context: MigrationContext) => {
     ? (
         await Promise.all(
           filePaths.map(async (p) => {
-            const text = fs.readFileSync(p, "utf8");
-            const json = tryParseJson<any>(text);
-            if (!json) {
-              return;
-            }
-            // name after last slash without any (sub)extensions
-            const databaseSlug = p.split("/").pop()?.split(".")[0];
+            try {
+              const text = readFileSync(p, "utf8");
+              const json = tryParseJson<any>(text);
+              if (!json) {
+                return;
+              }
+              // name after last slash without any (sub)extensions
+              const databaseSlug = p.split("/").pop()?.split(".")[0];
 
-            if (!databaseSlug) {
-              return;
+              if (!databaseSlug) {
+                return;
+              }
+              return { schemaString: text, databaseSlug };
+            } catch (e) {
+              console.log("errrr", e);
             }
-            return { schemaString: text, databaseSlug };
           }),
         )
       ).filter(notEmpty)
@@ -139,7 +142,7 @@ export const runMigration = async (context: MigrationContext) => {
   console.log("schemas found:", schemas.length);
 
   const results = await Promise.all(
-    schemas.map(async (item) => {
+    fileSchemas.map(async (item) => {
       const { databaseSlug, schemaString } = item;
 
       const envKeyName =
@@ -147,14 +150,18 @@ export const runMigration = async (context: MigrationContext) => {
       const currentEnvValue = process.env[envKeyName];
       const authToken = currentEnvValue || generateRandomString(64);
 
-      // ensure we get the existing authTokens in .env
-      // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
-      const upsertResult = await fetchCreateDatabase({
-        databaseSlug,
+      const createContext = {
+        databaseSlug: slugPrefix + databaseSlug,
         schemaString,
         authToken,
-      });
+        adminAuthToken: crudAdminToken,
+      };
+      console.log({ createContext });
+      // ensure we get the existing authTokens in .env
+      // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
+      const upsertResult = await fetchCreateDatabase(createContext);
 
+      console.log({ databaseSlug, upsertResult });
       return {
         databaseSlug,
         envKeyName,
@@ -167,22 +174,22 @@ export const runMigration = async (context: MigrationContext) => {
 
   // POST migrate.actionschema/generateSdk -> save sdk.ts
   // come up with generateSdk data
-  const generateResult = await fetchGenerateSdk({
-    openapis: results
-      .filter((x) => !!x.upsertResult?.openapiUrl)
-      .map((x) => ({
-        slug: x.databaseSlug,
-        openapiUrl: x.upsertResult.openapiUrl!,
-        envKeyName: x.envKeyName,
-        operationIds: undefined,
-      })),
-  });
+  // const generateResult = await fetchGenerateSdk({
+  //   openapis: results
+  //     .filter((x) => !!x.upsertResult?.openapiUrl)
+  //     .map((x) => ({
+  //       slug: x.databaseSlug,
+  //       openapiUrl: x.upsertResult?.openapiUrl!,
+  //       envKeyName: x.envKeyName,
+  //       operationIds: undefined,
+  //     })),
+  // });
 
-  if (!generateResult.sdk) {
-    console.log("Didn't get SDK");
-    return;
-  }
+  // if (!generateResult.sdk) {
+  //   console.log("Didn't get SDK");
+  //   return;
+  // }
 
-  fs.writeFileSync(path.join(process.cwd(), "src/sdk.ts"), generateResult.sdk);
+  // fs.writeFileSync(path.join(process.cwd(), "src/sdk.ts"), generateResult.sdk);
   console.log("Written to src/sdk.ts");
 };

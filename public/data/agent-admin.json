@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/CodeFromAnywhere/ActionSchema/main/schemas/action-schema.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "openapis": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "Authorization": { "type": "string" }
+      },
+      "required": ["url"],
+      "additionalProperties": false
+    },
+    "oauthDetails": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "service": { "type": "string" },
+          "securitySchemeKey": { "type": "string" },
+          "appId": { "type": "string" },
+          "appSecret": { "type": "string" }
+        }
+      }
+    }
+  }
+}

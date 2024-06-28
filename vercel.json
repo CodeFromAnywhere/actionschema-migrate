@@ -1,17 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/:path*",
-      "destination": "/api/:path*"
-    }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "maxDuration": 60,
-      "memory": 1024,
-      "includeFiles": "src/*.*"
-    }
-  },
+  "rewrites": [{ "source": "/:path*", "destination": "/api/:path*" }],
   "public": true
 }

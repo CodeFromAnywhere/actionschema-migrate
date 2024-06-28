@@ -1,17 +1,18 @@
-// import { $ } from "bun";
 import {
   notEmpty,
   snakeCase,
   capitalCase,
   tryParseJson,
   generateRandomString,
+  mergeObjectsArray,
+  mapKeys,
 } from "from-anywhere";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
-
-// import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
-// import { fetchGenerateSdk } from "./fetchGenerateSdk.js";
+import { fetchGenerateSdk } from "./fetchGenerateSdk.js";
+import { mkdir } from "node:fs/promises";
+import { writeToFiles } from "from-anywhere/node";
 
 type Schema = { [key: string]: any };
 
@@ -23,6 +24,7 @@ export type MigrationContext = {
   remoteJsonSchemaUrls?: string[];
 
   /** NB: Useful to add later like I wanted making an actionschema-server */
+
   remoteOpenapis?: {
     url: string;
     /**Prune it */
@@ -42,6 +44,32 @@ export type MigrationContext = {
   relativeCrudSchemaBasePath?: string;
   remoteCrudSchemaUrls?: string[];
   customCrudServer?: string;
+};
+
+export const addOrReplaceEnvKeys = (
+  filePath: string,
+  newEntries: Record<string, string>,
+) => {
+  const content = readFileSync(filePath, "utf8");
+  const lines = content.split("\n");
+  let updatedLines = [...lines];
+
+  Object.keys(newEntries).forEach((key) => {
+    const regex = new RegExp(`^${key}=`);
+    const existingLineIndex = lines.findIndex((line) => regex.test(line));
+
+    if (existingLineIndex !== -1) {
+      // Replace existing line
+      updatedLines[existingLineIndex] = `${key}=${newEntries[key]}`;
+    } else {
+      // Add new line
+      updatedLines.push(`${key}=${newEntries[key]}`);
+    }
+  });
+
+  const updatedContent = updatedLines.join("\n");
+
+  writeFileSync(filePath, updatedContent, "utf8");
 };
 
 /**
@@ -158,12 +186,16 @@ export const runMigration = async (context: MigrationContext) => {
         authToken,
         adminAuthToken: crudAdminToken,
       };
-      console.log({ createContext });
+
+      // console.log({ createContext });
       // ensure we get the existing authTokens in .env
       // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
       const upsertResult = await fetchCreateDatabase(createContext);
 
-      console.log({ databaseSlug, upsertResult });
+      if (!upsertResult?.isSuccessful) {
+        console.log(databaseSlug, upsertResult);
+      }
+
       return {
         databaseSlug,
         envKeyName,
@@ -174,24 +206,44 @@ export const runMigration = async (context: MigrationContext) => {
     }),
   );
 
+  const pushEnv = mergeObjectsArray(
+    results
+      .filter((x) => x.currentEnvValue !== x.authToken)
+      .map((x) => ({ [x.envKeyName]: x.authToken })),
+  );
+
+  addOrReplaceEnvKeys(path.join(process.cwd(), ".env"), pushEnv);
+
   // POST migrate.actionschema/generateSdk -> save sdk.ts
   // come up with generateSdk data
-  // const generateResult = await fetchGenerateSdk({
-  //   openapis: results
-  //     .filter((x) => !!x.upsertResult?.openapiUrl)
-  //     .map((x) => ({
-  //       slug: x.databaseSlug,
-  //       openapiUrl: x.upsertResult?.openapiUrl!,
-  //       envKeyName: x.envKeyName,
-  //       operationIds: undefined,
-  //     })),
-  // });
+  const generateResult = await fetchGenerateSdk({
+    openapis: results
+      .filter((x) => !!x.upsertResult?.openapiUrl)
+      .map((x) => ({
+        slug: x.databaseSlug,
+        openapiUrl: x.upsertResult?.openapiUrl!,
+        envKeyName: x.envKeyName,
+        operationIds: undefined,
+      })),
+  });
 
-  // if (!generateResult.sdk) {
-  //   console.log("Didn't get SDK");
-  //   return;
-  // }
+  if (!generateResult.files) {
+    console.log("Didn't get SDK");
+    return;
+  }
 
-  // fs.writeFileSync(path.join(process.cwd(), "src/sdk.ts"), generateResult.sdk);
-  console.log("Written to src/sdk.ts");
+  const absoluteSdkPath = path.join(process.cwd(), "src/sdk");
+
+  if (!existsSync(absoluteSdkPath)) {
+    await mkdir(absoluteSdkPath, { recursive: true });
+  }
+
+  //console.log({ generateResult });
+
+  const absoluteFiles = await mapKeys(generateResult.files, (key) =>
+    path.join(absoluteSdkPath, key),
+  );
+
+  await writeToFiles(absoluteFiles);
+  console.log("Written to:", absoluteSdkPath);
 };

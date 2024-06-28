@@ -2,7 +2,7 @@
 export type GenerateSdkContext = {
   openapis: {
     /** Used as prefix for the operation (e.g. `sdk.userCrud.create`). If not given, can be inferred from `openapi.info.title` or, if not existent, from `openapiUrl` */
-    slug?: string;
+    slug: string;
     envKeyName: string;
     /** If given, will only put this subset in the SDK */
     operationIds?: string[];
@@ -11,10 +11,10 @@ export type GenerateSdkContext = {
 };
 
 export type GenerateSdkResponse = {
-  sdk?: string;
+  files: { [key: string]: string };
 };
 
-const API_URL = "https://migrate.actionschema.com/generateSdk";
+const API_URL = "https://openapi-tools.actionschema.com/generateSdk";
 
 export async function fetchGenerateSdk(
   context: GenerateSdkContext,

@@ -1,5 +1,10 @@
-export const GET = () =>
-  new Response("Hello world", {
-    status: 302,
-    headers: { Location: "/migration-context.schema.json" },
+import fs from "node:fs";
+
+export const GET = () => {
+  const readmeContent = fs.readFileSync("../README.md");
+
+  return new Response(readmeContent, {
+    status: 200,
+    headers: { "Content-Type": "text/markdown" },
   });
+};

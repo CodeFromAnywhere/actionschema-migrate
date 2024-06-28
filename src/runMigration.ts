@@ -1,8 +1,16 @@
 import { $ } from "bun";
-import { notEmpty, tryParseJson } from "from-anywhere";
-import { readJsonFile } from "from-anywhere/node";
+import {
+  notEmpty,
+  snakeCase,
+  capitalCase,
+  tryParseJson,
+  generateRandomString,
+} from "from-anywhere";
+import { fs } from "from-anywhere/node";
 import { readdirSync } from "node:fs";
 import path from "node:path";
+import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
+import { fetchGenerateSdk } from "./fetchGenerateSdk.js";
 
 type Schema = { [key: string]: any };
 
@@ -35,11 +43,9 @@ export type MigrationContext = {
 };
 
 /**
+ * Needs access to env and fs
  */
-export const runMigration = async (
-  context: MigrationContext,
-  crudAdminToken: string,
-) => {
+export const runMigration = async (context: MigrationContext) => {
   const {
     relativeCrudSchemaBasePath,
     remoteCrudSchemaUrls,
@@ -55,6 +61,8 @@ export const runMigration = async (
   const absoluteBasePath = relativeCrudSchemaBasePath
     ? path.join(process.cwd(), relativeCrudSchemaBasePath)
     : undefined;
+
+  const crudAdminToken = process.env.CRUD_ADMIN_TOKEN;
 
   if (!crudAdminToken) {
     console.log("Please provide a crudAdminToken");
@@ -73,8 +81,18 @@ export const runMigration = async (
     ? (
         await Promise.all(
           filePaths.map(async (p) => {
-            const content = await readJsonFile<Schema>(p);
-            return content;
+            const text = fs.readFileSync(p, "utf8");
+            const json = tryParseJson<any>(text);
+            if (!json) {
+              return;
+            }
+            // name after last slash without any (sub)extensions
+            const databaseSlug = p.split("/").pop()?.split(".")[0];
+
+            if (!databaseSlug) {
+              return;
+            }
+            return { schemaString: text, databaseSlug };
           }),
         )
       ).filter(notEmpty)
@@ -104,7 +122,13 @@ export const runMigration = async (
               return;
             }
 
-            return json;
+            // name after last slash without any (sub)extensions
+            const databaseSlug = url.split("/").pop()?.split(".")[0];
+
+            if (!databaseSlug) {
+              return;
+            }
+            return { schemaString: text, databaseSlug };
           }),
         )
       ).filter(notEmpty)
@@ -112,12 +136,53 @@ export const runMigration = async (
 
   const schemas = fileSchemas.concat(remoteSchemas);
 
-  await Promise.all(
-    schemas.map(async (p) => {
+  console.log("schemas found:", schemas.length);
+
+  const results = await Promise.all(
+    schemas.map(async (item) => {
+      const { databaseSlug, schemaString } = item;
+
+      const envKeyName =
+        capitalCase(snakeCase(databaseSlug)) + "_CRUD_AUTH_TOKEN";
+      const currentEnvValue = process.env[envKeyName];
+      const authToken = currentEnvValue || generateRandomString(64);
+
+      // ensure we get the existing authTokens in .env
       // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
-      // overwrite .env keys that were submitted as authTokens
-      // submit {openapiUrl,authEnvironmentVariableName}[] via endpoint and get a single typesafe SDK client back
-      // ensure to warn if it goes wrong
+      const upsertResult = await fetchCreateDatabase({
+        databaseSlug,
+        schemaString,
+        authToken,
+      });
+
+      return {
+        databaseSlug,
+        envKeyName,
+        currentEnvValue,
+        authToken,
+        upsertResult,
+      };
     }),
   );
+
+  // POST migrate.actionschema/generateSdk -> save sdk.ts
+  // come up with generateSdk data
+  const generateResult = await fetchGenerateSdk({
+    openapis: results
+      .filter((x) => !!x.upsertResult?.openapiUrl)
+      .map((x) => ({
+        slug: x.databaseSlug,
+        openapiUrl: x.upsertResult.openapiUrl!,
+        envKeyName: x.envKeyName,
+        operationIds: undefined,
+      })),
+  });
+
+  if (!generateResult.sdk) {
+    console.log("Didn't get SDK");
+    return;
+  }
+
+  fs.writeFileSync(path.join(process.cwd(), "src/sdk.ts"), generateResult.sdk);
+  console.log("Written to src/sdk.ts");
 };

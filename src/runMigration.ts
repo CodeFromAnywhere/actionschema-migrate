@@ -17,6 +17,7 @@ type Schema = { [key: string]: any };
 
 /** TODO: Get this from schema. This may be an exception though, haha. */
 export type MigrationContext = {
+  slugPrefix?: string;
   /**any json schemas we need in typescript*/
   relativeJsonSchemaBasePath?: string;
   remoteJsonSchemaUrls?: string[];
@@ -50,6 +51,7 @@ export const runMigration = async (context: MigrationContext) => {
   const {
     relativeCrudSchemaBasePath,
     remoteCrudSchemaUrls,
+    slugPrefix,
     relativeAgentBasePath,
     remoteAgentUrls,
     remoteOpenapis,
@@ -151,7 +153,7 @@ export const runMigration = async (context: MigrationContext) => {
       const authToken = currentEnvValue || generateRandomString(64);
 
       const createContext = {
-        databaseSlug: slugPrefix + databaseSlug,
+        databaseSlug: (slugPrefix || "") + databaseSlug,
         schemaString,
         authToken,
         adminAuthToken: crudAdminToken,

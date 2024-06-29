@@ -2,7 +2,14 @@
 
 This CLI performs a migration on remote ActionSchema microservices and creates an SDK and Typescript Types in your codebase afterwards.
 
-Goal: Provide an easy way to use openapi-based microservices without the pain of microservices
+Goals:
+
+- Provide an easy way to use openapi-based microservices without the pain of microservices.
+- Develop things openapi-first and schema-first while keeping a good typescript integration.
+
+Non-goals:
+
+- Make this available for other languages than typescript
 
 # Usage
 
@@ -21,3 +28,4 @@ Goal: Provide an easy way to use openapi-based microservices without the pain of
 
 - Add support for adding sdk for any (partial) openapi from either file or url
 - Use this for `actionschema-migrate` as well, as it depends on the `data` and `openapi-tools` microservices.
+- Add support for all other described functionality (see [migration-context](public/migration-context.schema.json))

@@ -171,7 +171,7 @@ export const runMigration = async (context: MigrationContext) => {
 
   const schemas = fileSchemas.concat(remoteSchemas);
 
-  console.log("schemas found:", schemas.length, { schemas, filePaths });
+  console.log("schemas found:", schemas.length, { filePaths });
 
   const results = await Promise.all(
     fileSchemas.map(async (item) => {

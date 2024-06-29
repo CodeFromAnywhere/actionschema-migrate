@@ -1,5 +1,3 @@
 {
-  "$schema": "https://migrate.actionschema.com/migration-context.schema.json",
-  "relativeCrudSchemaBasePath": "public/data",
-  "slugPrefix": "migrate-"
+  "$schema": "https://migrate.actionschema.com/migration-context.schema.json"
 }

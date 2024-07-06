@@ -87,5 +87,6 @@
     "customCrudServer": {
       "type": "string"
     }
-  }
+  },
+  "additionalProperties": false
 }

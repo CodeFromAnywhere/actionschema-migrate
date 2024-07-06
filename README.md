@@ -22,7 +22,7 @@ Non-goals:
 }
 ```
 
-2. Run `bunx actionschema-migrate` and follow further instructions.
+2. Run `bunx actionschema-migrate@latest` and follow further instructions.
 
 # TODO
 

@@ -26,6 +26,7 @@
   "homepage": "https://github.com/CodeFromAnywhere/actionschema-migrate#readme",
   "dependencies": {
     "from-anywhere": "0.0.37",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "openapi-util": "0.0.72"
   }
 }

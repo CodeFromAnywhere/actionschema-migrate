@@ -1,45 +1,56 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "definitions": {
+    "OpenapiConfig": {
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string" },
+        "openapiUrl": {
+          "type": "string",
+          "description": "Can be an URL or relative path, leading to an OpenAPI specification."
+        },
+        "envKeyName": {
+          "type": "string",
+          "description": "Must provide an authorization key that is available as environment variable, to be used as Authorization header (bearer by default)"
+        },
+        "operationIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "If given, selects only these operationIds from the openapi."
+        }
+      },
+      "required": ["slug", "openapiUrl", "envKeyName"]
+    }
+  },
   "properties": {
     "relativeOutputPath": {
       "type": "string",
       "description": "Folder directory where SDK should end up"
     },
-    "slugPrefix": {
+
+    "crudSlugPrefix": {
       "type": "string",
       "description": "Prefix to use for slugs. Can be useful to keep proper naming"
     },
+
     "relativeJsonSchemaBasePath": {
       "type": "string",
       "description": "Any JSON schemas we need in typescript"
     },
     "remoteJsonSchemaUrls": {
       "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "items": { "type": "string" }
     },
-    "remoteOpenapis": {
+
+    "openapis": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          },
-          "operationIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Prune it"
-          }
-        },
-        "required": ["url"]
-      },
-      "description": "Useful to add later like I wanted making an actionschema-server"
+      "items": { "$ref": "#/definitions/OpenapiConfig" },
+      "description": "Remote or local (partial) OpenAPIs that need to be included in the SDK."
     },
+
     "relativeAgentBasePath": {
       "type": "string",
       "description": "Agent schemas that need to become an agent API"

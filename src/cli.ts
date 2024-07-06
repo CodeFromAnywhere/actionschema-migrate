@@ -1,9 +1,10 @@
 #!/usr/bin/env bun
 
 import path from "node:path";
-import { MigrationContext, runMigration } from "./runMigration.js";
+import { runMigration } from "./runMigration.js";
 import fs, { PathLike, existsSync, access, constants } from "node:fs";
 import { tryParseJson } from "from-anywhere";
+import { MigrationContext } from "./MigrationContext.js";
 
 const fsPromises = fs.promises;
 /**

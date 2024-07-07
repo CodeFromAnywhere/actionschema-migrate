@@ -40,6 +40,7 @@
       "type": "string",
       "description": "Any JSON schemas we need in typescript"
     },
+
     "remoteJsonSchemaUrls": {
       "type": "array",
       "items": { "type": "string" }
@@ -51,29 +52,49 @@
       "description": "Remote or local (partial) OpenAPIs that need to be included in the SDK."
     },
 
-    "relativeAgentBasePath": {
-      "type": "string",
-      "description": "Agent schemas that need to become an agent API"
+    "agentConfig": {
+      "description": "Agents that are based on the openapi generated in this server. Each agent will be made available in openapi as well (by proxy). If given, requires API_SECRET, OPENAPI_SECRET, ADMIN_SECRET env variables to be present, as well as a token [SLUG]_SECRET for every slug",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "openapiUrl": { "type": "string" },
+        "agents": {
+          "description": "An object with slugs as keys and values are the agent settings.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "instructions": {
+                "type": "string",
+                "description": "Instructions for the agent. Instead, you can also use markdown to store the instructions."
+              },
+              "model": { "type": "string" },
+              "operationIds": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        "slugPrefix": { "type": "string" },
+        "relativeAgentBasePath": {
+          "type": "string",
+          "description": "If given, the instructions can be found here in [slug].md for each slug"
+        }
+      },
+      "required": ["openapiUrl", "agents", "slugPrefix"]
     },
-    "remoteAgentUrls": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "customAgentServer": {
-      "type": "string"
-    },
+
     "relativeFilePromptBasePath": {
       "type": "string",
       "description": "File prompts that need to be accessible through the actionschema CLI"
     },
+
     "remoteFilePromptUrls": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
+
     "relativeCrudSchemaBasePath": {
       "type": "string",
       "description": "CRUD schemas we need to be a CRUD API"

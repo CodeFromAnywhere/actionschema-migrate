@@ -1,7 +1,7 @@
 import { tryParseJson } from "from-anywhere";
 export async function fetchCreateDatabase(params) {
     try {
-        const url = "https://data.actionschema.com/root/createDatabase";
+        const url = "https://data.actionschema.com/createDatabase";
         const { adminAuthToken, ...rest } = params;
         const response = await fetch(url, {
             method: "POST",

@@ -19,7 +19,7 @@ export async function fetchCreateDatabase(
   params: CreateDatabaseParams,
 ): Promise<CreateDatabaseResponse | null> {
   try {
-    const url = "https://data.actionschema.com/root/createDatabase";
+    const url = "https://data.actionschema.com/createDatabase";
 
     const { adminAuthToken, ...rest } = params;
     const response = await fetch(url, {

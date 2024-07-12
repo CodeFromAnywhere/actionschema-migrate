@@ -3,7 +3,7 @@
   "version": "0.0.11",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
-  "main": "src/cli.ts",
+  "main": "build/cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

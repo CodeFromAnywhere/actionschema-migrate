@@ -26,6 +26,11 @@
     }
   },
   "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+
     "relativeOutputPath": {
       "type": "string",
       "description": "Folder directory where SDK should end up"
@@ -53,7 +58,7 @@
     },
 
     "agentConfig": {
-      "description": "Agents that are based on the openapi generated in this server. Each agent will be made available in openapi as well (by proxy). If given, requires API_SECRET, OPENAPI_SECRET, ADMIN_SECRET env variables to be present, as well as a token [SLUG]_SECRET for every slug",
+      "description": "Agents that are based on the openapi generated in this server. Each agent will be made available in openapi as well (by proxy). If given, requires OPENAI_SECRET, OPENAPI_SECRET, ADMIN_SECRET env variables to be present, as well as a token [SLUG]_SECRET for every slug",
       "type": "object",
       "additionalProperties": false,
       "properties": {

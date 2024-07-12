@@ -1,6 +1,6 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
@@ -13,12 +13,11 @@
   },
   "author": "Wijnand",
   "license": "MIT",
-  "bin": "src/cli.ts",
+  "bin": "build/cli.js",
   "bugs": {
     "url": "https://github.com/CodeFromAnywhere/actionschema-migrate/issues"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.6",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.9",
     "openapi-typescript": "^7.0.0"

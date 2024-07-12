@@ -40,8 +40,23 @@ export const readJsonFile = async <T extends unknown>(
 // looks for MigrationContext in migration-context.json in the first folder where package.json is found.
 // TODO: also parse/validate it
 const actionschemaJsonPath = path.join(process.cwd(), "actionschema.json");
+const publicActionschemaJsonPath = path.join(
+  process.cwd(),
+  "public",
+  "actionschema.json",
+);
+const existingPath = fs.existsSync(publicActionschemaJsonPath)
+  ? publicActionschemaJsonPath
+  : fs.existsSync(actionschemaJsonPath)
+  ? actionschemaJsonPath
+  : undefined;
 
-readJsonFile(actionschemaJsonPath).then((response) => {
+if (!existingPath) {
+  console.log("No actionschema.json found");
+  process.exit();
+}
+
+readJsonFile(existingPath).then((response) => {
   if (!response) {
     console.log("Couldn't find actionschema.json");
     return;

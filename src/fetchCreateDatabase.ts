@@ -27,7 +27,7 @@ export async function fetchCreateDatabase(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        X_ADMIN_AUTH_TOKEN: adminAuthToken,
+        Authorization: "Bearer " + adminAuthToken,
       },
       body: JSON.stringify(rest),
     });

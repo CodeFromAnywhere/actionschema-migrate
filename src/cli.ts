@@ -1,10 +1,12 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 import path from "node:path";
 import { runMigration } from "./runMigration.js";
 import fs, { PathLike, existsSync, access, constants } from "node:fs";
 import { tryParseJson } from "from-anywhere";
 import { MigrationContext } from "./MigrationContext.js";
+import dotenv from "dotenv";
+dotenv.config({});
 
 const fsPromises = fs.promises;
 /**

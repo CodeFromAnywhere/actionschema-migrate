@@ -70,8 +70,10 @@ export const upsertCrudOpenapis = async (context) => {
         const envKeyName = capitalCase(snakeCase(databaseSlug)) + "_CRUD_AUTH_TOKEN";
         const currentEnvValue = process.env[envKeyName];
         const authToken = currentEnvValue || generateRandomString(64);
+        console.log({ envKeyName, currentEnvValue, authToken });
+        const fullDatabaseSlug = (crudSlugPrefix || "") + databaseSlug;
         const createContext = {
-            databaseSlug: (crudSlugPrefix || "") + databaseSlug,
+            databaseSlug: fullDatabaseSlug,
             schemaString,
             authToken,
             adminAuthToken: crudAdminToken,
@@ -81,10 +83,10 @@ export const upsertCrudOpenapis = async (context) => {
         // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
         const upsertResult = await fetchCreateDatabase(createContext);
         if (!upsertResult?.isSuccessful) {
-            console.log(databaseSlug, upsertResult);
+            console.log({ fullDatabaseSlug }, upsertResult);
         }
         return {
-            databaseSlug,
+            databaseSlug: fullDatabaseSlug,
             envKeyName,
             currentEnvValue,
             authToken,

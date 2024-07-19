@@ -8,7 +8,7 @@ import {
 } from "from-anywhere";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { fetchCreateDatabase } from "./fetchCreateDatabase.js";
+import { fetchUpsertDatabase } from "./fetchUpsertDatabase.js";
 
 import { addOrReplaceEnvKeys } from "./addOrReplaceEnvKeys.js";
 type JsonSchema = { [key: string]: any };
@@ -128,7 +128,7 @@ export const upsertCrudOpenapis = async (context: {
       // console.log({ createContext });
       // ensure we get the existing authTokens in .env
       // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
-      const upsertResult = await fetchCreateDatabase(createContext);
+      const upsertResult = await fetchUpsertDatabase(createContext);
 
       if (!upsertResult?.isSuccessful) {
         console.log({ fullDatabaseSlug }, upsertResult);

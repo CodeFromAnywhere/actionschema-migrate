@@ -15,11 +15,11 @@ interface CreateDatabaseParams {
   adminAuthToken: string;
 }
 
-export async function fetchCreateDatabase(
+export async function fetchUpsertDatabase(
   params: CreateDatabaseParams,
 ): Promise<CreateDatabaseResponse | null> {
   try {
-    const url = "https://data.actionschema.com/createDatabase";
+    const url = "https://data.actionschema.com/upsertDatabase";
 
     const { adminAuthToken, ...rest } = params;
     const response = await fetch(url, {

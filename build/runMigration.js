@@ -30,6 +30,7 @@ export const runMigration = async (context) => {
         relativeCrudSchemaBasePath,
         remoteCrudSchemaUrls,
     });
+    console.log({ crudOpenapis, openapis });
     const allOpenapis = (openapis || []).concat(crudOpenapis || []);
     const generateResult = await generateTypescriptSdk({
         openapis: allOpenapis,

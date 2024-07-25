@@ -13,7 +13,7 @@ import { upsertCrudOpenapis } from "./upsertCrudOpenapis.js";
 export const runMigration = async (context: MigrationContext) => {
   const {
     relativeOutputPath,
-
+    useJsImportSuffix,
     //crud stuff
     relativeCrudSchemaBasePath,
     remoteCrudSchemaUrls,
@@ -53,6 +53,7 @@ export const runMigration = async (context: MigrationContext) => {
 
   const generateResult = await generateTypescriptSdk({
     openapis: allOpenapis,
+    useJsImportSuffix,
   });
 
   if (!generateResult.files) {

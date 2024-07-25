@@ -9,7 +9,7 @@ import { upsertCrudOpenapis } from "./upsertCrudOpenapis.js";
  * Needs access to env and fs
  */
 export const runMigration = async (context) => {
-    const { relativeOutputPath, 
+    const { relativeOutputPath, useJsImportSuffix, 
     //crud stuff
     relativeCrudSchemaBasePath, remoteCrudSchemaUrls, crudSlugPrefix, customCrudServer, 
     // openapis
@@ -34,6 +34,7 @@ export const runMigration = async (context) => {
     const allOpenapis = (openapis || []).concat(crudOpenapis || []);
     const generateResult = await generateTypescriptSdk({
         openapis: allOpenapis,
+        useJsImportSuffix,
     });
     if (!generateResult.files) {
         console.log("Didn't get SDK");

@@ -1,5 +1,5 @@
-import { mapKeys } from "from-anywhere";
-import { existsSync } from "node:fs";
+import { mapKeys, notEmpty, tryParseJson } from "from-anywhere";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { writeToFiles } from "from-anywhere/node";
@@ -31,7 +31,35 @@ export const runMigration = async (context) => {
         remoteCrudSchemaUrls,
     });
     console.log({ crudOpenapis, openapis });
-    const allOpenapis = (openapis || []).concat(crudOpenapis || []);
+    const parsedOpenapis = (openapis || [])
+        .map((item) => {
+        if (URL.canParse(item.openapiUrl)) {
+            return item;
+        }
+        const absolutePath = path.join(process.cwd(), item.openapiUrl);
+        const realAbsolutePath = existsSync(absolutePath)
+            ? absolutePath
+            : existsSync(item.openapiUrl)
+                ? item.openapiUrl
+                : undefined;
+        if (!realAbsolutePath) {
+            console.log("couldnt find/parse openapi file", item.openapiUrl, item.slug);
+            return null;
+        }
+        const fileContent = readFileSync(realAbsolutePath, "utf8");
+        const parsed = tryParseJson(fileContent);
+        if (!parsed) {
+            return null;
+        }
+        return {
+            slug: item.slug,
+            envKeyName: item.envKeyName,
+            operationIds: item.operationIds,
+            openapiObject: parsed,
+        };
+    })
+        .filter(notEmpty);
+    const allOpenapis = parsedOpenapis.concat(crudOpenapis || []);
     const generateResult = await generateTypescriptSdk({
         openapis: allOpenapis,
         useJsImportSuffix,

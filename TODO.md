@@ -1,8 +1,8 @@
 # Use `authenticate` via SDK
 
-Improve `actionschema-migrate` to allow for pruned OpenAPI
+✅ Improve `actionschema-migrate` to allow for pruned OpenAPI
 
-Also improve the fact that imports need to have a `.js` suffix. Add this as config.
+✅ Also improve the fact that imports need to have a `.js` suffix. Add this as config.
 
 Make SDK with https://auth.actionschema.com/openapi.json with `operationIds: ["authenticate"]`
 

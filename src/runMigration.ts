@@ -52,20 +52,21 @@ export const runMigration = async (context: MigrationContext) => {
 
   const parsedOpenapis = (openapis || [])
     .map((item) => {
-      if (URL.canParse(item.openapiUrl)) {
-        return item;
+      if (URL.canParse(item.openapiUrlOrPath)) {
+        const { openapiUrlOrPath, ...rest } = item;
+        return { ...rest, openapiUrl: openapiUrlOrPath };
       }
-      const absolutePath = path.join(process.cwd(), item.openapiUrl);
+      const absolutePath = path.join(process.cwd(), item.openapiUrlOrPath);
       const realAbsolutePath = existsSync(absolutePath)
         ? absolutePath
-        : existsSync(item.openapiUrl)
-        ? item.openapiUrl
+        : existsSync(item.openapiUrlOrPath)
+        ? item.openapiUrlOrPath
         : undefined;
 
       if (!realAbsolutePath) {
         console.log(
           "couldnt find/parse openapi file",
-          item.openapiUrl,
+          item.openapiUrlOrPath,
           item.slug,
         );
         return null;

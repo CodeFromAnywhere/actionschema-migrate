@@ -7,13 +7,15 @@ export interface OpenAPIConfig {
   /**
    * Can be an URL or relative path, leading to an OpenAPI specification.
    */
-  openapiUrl: string;
+  openapiUrlOrPath: string;
 
   /**
-   * Must provide an authorization key that is available as environment variable,
+   * Provide an authorization key that is available as environment variable,
    * to be used as Authorization header (bearer by default)
+   *
+   * If not given, will not include an Authorization header
    */
-  envKeyName: string;
+  envKeyName?: string;
 
   /**
    * If given, selects only these operationIds from the openapi.

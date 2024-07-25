@@ -33,17 +33,18 @@ export const runMigration = async (context) => {
     console.log({ crudOpenapis, openapis });
     const parsedOpenapis = (openapis || [])
         .map((item) => {
-        if (URL.canParse(item.openapiUrl)) {
-            return item;
+        if (URL.canParse(item.openapiUrlOrPath)) {
+            const { openapiUrlOrPath, ...rest } = item;
+            return { ...rest, openapiUrl: openapiUrlOrPath };
         }
-        const absolutePath = path.join(process.cwd(), item.openapiUrl);
+        const absolutePath = path.join(process.cwd(), item.openapiUrlOrPath);
         const realAbsolutePath = existsSync(absolutePath)
             ? absolutePath
-            : existsSync(item.openapiUrl)
-                ? item.openapiUrl
+            : existsSync(item.openapiUrlOrPath)
+                ? item.openapiUrlOrPath
                 : undefined;
         if (!realAbsolutePath) {
-            console.log("couldnt find/parse openapi file", item.openapiUrl, item.slug);
+            console.log("couldnt find/parse openapi file", item.openapiUrlOrPath, item.slug);
             return null;
         }
         const fileContent = readFileSync(realAbsolutePath, "utf8");

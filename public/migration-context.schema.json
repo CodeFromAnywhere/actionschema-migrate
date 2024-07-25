@@ -6,13 +6,13 @@
       "type": "object",
       "properties": {
         "slug": { "type": "string" },
-        "openapiUrl": {
+        "openapiUrlOrPath": {
           "type": "string",
           "description": "Can be an URL or relative path, leading to an OpenAPI specification."
         },
         "envKeyName": {
           "type": "string",
-          "description": "Must provide an authorization key that is available as environment variable, to be used as Authorization header (bearer by default)"
+          "description": "Provide an authorization key that is available as environment variable, to be used as Authorization header (bearer by default) \n\n If not given, will not include an Authorization header"
         },
         "operationIds": {
           "type": "array",
@@ -22,7 +22,7 @@
           "description": "If given, selects only these operationIds from the openapi."
         }
       },
-      "required": ["slug", "openapiUrl", "envKeyName"]
+      "required": ["slug", "openapiUrl"]
     }
   },
   "properties": {

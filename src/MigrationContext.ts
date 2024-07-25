@@ -24,6 +24,7 @@ export interface OpenAPIConfig {
 /** TODO: Get this from schema. This may be an exception though, haha. */
 export type MigrationContext = {
   relativeOutputPath?: string;
+  useJsImportSuffix?: boolean;
   /**any json schemas we need in typescript*/
   relativeJsonSchemaBasePath?: string;
   remoteJsonSchemaUrls?: string[];

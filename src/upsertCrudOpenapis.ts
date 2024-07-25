@@ -125,7 +125,7 @@ export const upsertCrudOpenapis = async (context: {
         adminAuthToken: crudAdminToken,
       };
 
-      console.log({ createContext });
+      // console.log({ createContext });
       // ensure we get the existing authTokens in .env
       // submit name+schema+adminSecret+authtoken to app crud upsert endpoint and get openapi back
       const upsertResult = await fetchUpsertDatabase(createContext);

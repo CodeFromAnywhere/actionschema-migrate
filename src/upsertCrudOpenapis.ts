@@ -27,6 +27,10 @@ export const upsertCrudOpenapis = async (context: {
     remoteCrudSchemaUrls,
   } = context;
 
+  if (relativeCrudSchemaBasePath && !remoteCrudSchemaUrls?.length) {
+    return;
+  }
+
   const absoluteBasePath = relativeCrudSchemaBasePath
     ? path.join(process.cwd(), relativeCrudSchemaBasePath)
     : undefined;

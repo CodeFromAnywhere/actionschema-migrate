@@ -1,11 +1,11 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
   "scripts": {
-    "pub": "tsc && npm version patch -f && npm publish && git add . && git commit -m 'improvements' && git push origin main"
+    "pub": "tsc && npm version patch -f && npm publish && git add . && git commit -m 'improvements' && git push"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,6 @@
     "dotenv": "^16.4.5",
     "from-anywhere": "0.0.37",
     "js-yaml": "^4.1.0",
-    "openapi-util": "0.0.89"
+    "openapi-util": "0.0.90"
   }
 }

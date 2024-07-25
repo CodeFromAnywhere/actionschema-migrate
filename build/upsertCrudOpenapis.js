@@ -5,7 +5,8 @@ import { fetchUpsertDatabase } from "./fetchUpsertDatabase.js";
 import { addOrReplaceEnvKeys } from "./addOrReplaceEnvKeys.js";
 export const upsertCrudOpenapis = async (context) => {
     const { crudSlugPrefix, crudAdminToken, relativeCrudSchemaBasePath, remoteCrudSchemaUrls, } = context;
-    if (relativeCrudSchemaBasePath && !remoteCrudSchemaUrls?.length) {
+    if (!relativeCrudSchemaBasePath && !remoteCrudSchemaUrls?.length) {
+        console.log("No CRUDs need to be generated");
         return;
     }
     const absoluteBasePath = relativeCrudSchemaBasePath

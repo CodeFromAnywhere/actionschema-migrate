@@ -27,7 +27,8 @@ export const upsertCrudOpenapis = async (context: {
     remoteCrudSchemaUrls,
   } = context;
 
-  if (relativeCrudSchemaBasePath && !remoteCrudSchemaUrls?.length) {
+  if (!relativeCrudSchemaBasePath && !remoteCrudSchemaUrls?.length) {
+    console.log("No CRUDs need to be generated");
     return;
   }
 

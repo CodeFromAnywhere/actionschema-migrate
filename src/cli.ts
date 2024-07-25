@@ -63,6 +63,5 @@ readJsonFile(existingPath).then((response) => {
     console.log("Couldn't find actionschema.json");
     return;
   }
-  console.log({ response });
   runMigration(response as MigrationContext);
 });

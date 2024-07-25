@@ -1,11 +1,11 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
   "scripts": {
-    "pub": "tsc && npm version patch -f && npm publish && git add . && git commit -m 'improvements' && git push"
+    "pub": "tsc && npm version patch -f && npm publish && git add . && git commit -m 'improvements' && git push origin main"
   },
   "repository": {
     "type": "git",

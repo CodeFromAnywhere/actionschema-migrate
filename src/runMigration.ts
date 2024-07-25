@@ -40,6 +40,7 @@ export const runMigration = async (context: MigrationContext) => {
 
   /// crud stuff
   const crudAdminToken = process.env.CRUD_ADMIN_TOKEN;
+
   const crudOpenapis = await upsertCrudOpenapis({
     crudSlugPrefix,
     customCrudServer,

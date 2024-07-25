@@ -1,11 +1,13 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.33",
+  "version": "0.0.36",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc",
+    "up": "npm version patch -f",
+    "pub": "npm run up && npm publish && git add . && git commit -m 'improvements' && git push"
   },
   "repository": {
     "type": "git",

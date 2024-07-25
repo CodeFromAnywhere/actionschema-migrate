@@ -1,6 +1,6 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",

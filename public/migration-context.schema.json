@@ -22,7 +22,8 @@
           "description": "If given, selects only these operationIds from the openapi."
         }
       },
-      "required": ["slug", "openapiUrl"]
+      "additionalProperties": false,
+      "required": ["slug", "openapiUrlOrPath"]
     }
   },
   "properties": {

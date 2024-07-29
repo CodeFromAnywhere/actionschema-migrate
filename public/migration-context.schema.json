@@ -110,14 +110,62 @@
       "type": "string",
       "description": "CRUD schemas we need to be a CRUD API"
     },
+
     "remoteCrudSchemaUrls": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
+
     "customCrudServer": {
       "type": "string"
+    },
+
+    "data": {
+      "type": "object",
+      "description": "Specifies the datastructures required for the system to work in plain English. Keys are relative file-paths.",
+      "additionalProperties": { "type": "string" }
+    },
+
+    "backend": {
+      "type": "object",
+      "description": "Specifies the API Endpoints needed on the backend",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationIds": { "type": "string" },
+          "specification": { "type": "string" }
+        }
+      }
+    },
+
+    "frontend": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": {} },
+      "properties": {
+        "theme": {},
+        "components": {
+          "type": "object",
+          "description": "Idea that I'm brainstorming: could be to create components in a ctml-style way so we can easily make big HTML pages more modular and reducing context.",
+          "properties": {},
+          "additionalProperties": { "type": "string" }
+        },
+        "sitemap": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "operationIds": { "type": "string" },
+              "specification": { "type": "string" }
+            }
+          }
+        }
+      }
     }
   },
   "additionalProperties": false

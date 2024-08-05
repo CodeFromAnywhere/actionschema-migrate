@@ -1,6 +1,6 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.55",
+  "version": "0.0.56",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
@@ -27,6 +27,6 @@
     "dotenv": "^16.4.5",
     "from-anywhere": "0.0.38",
     "js-yaml": "^4.1.0",
-    "openapi-util": "0.0.127"
+    "openapi-util": "0.0.128"
   }
 }

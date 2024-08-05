@@ -45,7 +45,8 @@ export const runMigration = async (context) => {
             }
             const fileContent = readFileSync(realAbsolutePath, "utf8");
             const parsed = tryParseJson(fileContent);
-            if (!parsed) {
+            if (!parsed || !parsed.paths) {
+                console.log("Couldn't get openapi at", realAbsolutePath);
                 return null;
             }
             return {

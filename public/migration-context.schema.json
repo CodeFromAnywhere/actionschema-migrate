@@ -1,14 +1,18 @@
 {
-  "$schema": "https://raw.githubusercontent.com/CodeFromAnywhere/ActionSchema/main/schemas/action-schema.schema.json#",
+  "$schema": "https://spec.actionschema.com/actionschema.json#",
   "type": "object",
   "definitions": {
     "OpenapiConfig": {
       "type": "object",
       "properties": {
         "slug": { "type": "string" },
-        "openapiUrlOrPath": {
+        "openapiUrl": {
           "type": "string",
-          "description": "Can be an URL or relative path, leading to an OpenAPI specification."
+          "description": "Must be an URL leading to a hosted OpenAPI specification."
+        },
+        "openapiPath": {
+          "type": "string",
+          "description": "If given, needs to be the path that becomes `openapiUrl` in production. Will use it for generation."
         },
         "envKeyName": {
           "type": "string",
@@ -23,7 +27,7 @@
         }
       },
       "additionalProperties": false,
-      "required": ["slug", "openapiUrlOrPath"]
+      "required": ["slug", "openapiUrl"]
     }
   },
   "properties": {

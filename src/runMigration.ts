@@ -49,43 +49,41 @@ export const runMigration = async (context: MigrationContext) => {
     remoteCrudSchemaUrls,
   });
 
-  console.log({ crudOpenapis, openapis });
-
   const parsedOpenapis = (openapis || [])
     .map((item) => {
-      if (URL.canParse(item.openapiUrlOrPath)) {
-        const { openapiUrlOrPath, ...rest } = item;
-        return { ...rest, openapiUrl: openapiUrlOrPath };
+      if (item.openapiPath) {
+        const absolutePath = path.join(process.cwd(), item.openapiPath);
+        const realAbsolutePath = existsSync(absolutePath)
+          ? absolutePath
+          : existsSync(item.openapiPath)
+            ? item.openapiPath
+            : undefined;
+
+        if (!realAbsolutePath) {
+          console.log(
+            "couldnt find/parse openapi file",
+            item.openapiPath,
+            item.slug,
+          );
+
+          return null;
+        }
+
+        const fileContent = readFileSync(realAbsolutePath, "utf8");
+        const parsed = tryParseJson<OpenapiDocument>(fileContent);
+
+        if (!parsed) {
+          return null;
+        }
+
+        return {
+          ...item,
+          // attach object if it comes from local path
+          openapiObject: parsed,
+        };
       }
-      const absolutePath = path.join(process.cwd(), item.openapiUrlOrPath);
-      const realAbsolutePath = existsSync(absolutePath)
-        ? absolutePath
-        : existsSync(item.openapiUrlOrPath)
-        ? item.openapiUrlOrPath
-        : undefined;
 
-      if (!realAbsolutePath) {
-        console.log(
-          "couldnt find/parse openapi file",
-          item.openapiUrlOrPath,
-          item.slug,
-        );
-        return null;
-      }
-
-      const fileContent = readFileSync(realAbsolutePath, "utf8");
-      const parsed = tryParseJson<OpenapiDocument>(fileContent);
-
-      if (!parsed) {
-        return null;
-      }
-
-      return {
-        slug: item.slug,
-        envKeyName: item.envKeyName,
-        operationIds: item.operationIds,
-        openapiObject: parsed,
-      };
+      return item;
     })
     .filter(notEmpty);
 

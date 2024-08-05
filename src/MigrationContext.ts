@@ -5,9 +5,12 @@ export interface OpenAPIConfig {
   slug: string;
 
   /**
-   * Can be an URL or relative path, leading to an OpenAPI specification.
+   * Must be an URL leading to a hosted OpenAPI specification.
    */
-  openapiUrlOrPath: string;
+  openapiUrl: string;
+
+  /** If given, needs to be the path that becomes `openapiUrl` in production. Will use it for generation */
+  openapiPath?: string;
 
   /**
    * Provide an authorization key that is available as environment variable,

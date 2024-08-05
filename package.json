@@ -1,6 +1,6 @@
 {
   "name": "actionschema-migrate",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "type": "module",
   "description": "Migrate your actionschema server and get an SDK",
   "main": "build/cli.js",
@@ -25,8 +25,8 @@
   "homepage": "https://github.com/CodeFromAnywhere/actionschema-migrate#readme",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "from-anywhere": "0.0.37",
+    "from-anywhere": "0.0.38",
     "js-yaml": "^4.1.0",
-    "openapi-util": "0.0.101"
+    "openapi-util": "0.0.121"
   }
 }

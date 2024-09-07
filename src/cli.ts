@@ -3,7 +3,7 @@
 import path from "node:path";
 import { runMigration } from "./runMigration.js";
 import fs, { PathLike, existsSync, access, constants } from "node:fs";
-import { tryParseJson } from "from-anywhere";
+import { tryParseJson } from "edge-util";
 import { MigrationContext } from "./MigrationContext.js";
 import dotenv from "dotenv";
 dotenv.config({});
@@ -50,8 +50,8 @@ const publicActionschemaJsonPath = path.join(
 const existingPath = fs.existsSync(publicActionschemaJsonPath)
   ? publicActionschemaJsonPath
   : fs.existsSync(actionschemaJsonPath)
-  ? actionschemaJsonPath
-  : undefined;
+    ? actionschemaJsonPath
+    : undefined;
 
 if (!existingPath) {
   console.log("No actionschema.json found");

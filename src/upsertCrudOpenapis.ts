@@ -5,7 +5,7 @@ import {
   notEmpty,
   snakeCase,
   tryParseJson,
-} from "from-anywhere";
+} from "edge-util";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fetchUpsertDatabase } from "./fetchUpsertDatabase.js";

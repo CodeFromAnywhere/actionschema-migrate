@@ -1,4 +1,4 @@
-import { tryParseJson } from "from-anywhere";
+import { tryParseJson } from "edge-util";
 
 interface CreateDatabaseResponse {
   isSuccessful: boolean;

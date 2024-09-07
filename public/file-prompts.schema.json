@@ -1,5 +1,5 @@
 {
-  "$schema": "https://spec.actionschema.com/actionschema.json",
+  "$schema": "https://ref.actionschema.com/actionschema.json",
   "type": "object",
   "description": "A way to easily generate code inside your project",
   "additionalProperties": false,

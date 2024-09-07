@@ -1,3 +1,5 @@
+> September 2024: Decided to for now lay down work on this. The reason is that this high level of abstraction causes the resulting code to be quite hard to read/understand. It's useful but the other way to do it is using LLMs and generate less abstracted code directly from an OpenAPI. The latter - although it repeats - results in much simpler, more readable code.
+
 # ActionSchema Migrate CLI
 
 This CLI performs a migration on remote ActionSchema microservices and creates an SDK and Typescript Types in your codebase afterwards.
